@@ -78,6 +78,15 @@ jobs:
             docker login --username=_ --password=$HEROKU_TOKEN registry.heroku.com
             docker build -t registry.heroku.com/$HEROKU_APP_NAME/web .
             docker push registry.heroku.com/$HEROKU_APP_NAME/web:latest
+      - run:
+          name: Setup Heroku
+          command: |
+            chmod +x .circleci/setup-heroku.sh
+            .circleci/setup-heroku.sh
+      - run:
+          name: Deploy to Heroku
+          command: |
+            heroku container:release web --app $HEROKU_APP_NAME
 workflows:
   version: 2
   install_and_test:
