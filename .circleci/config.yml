@@ -46,7 +46,7 @@ jobs:
           path: reports/junit
   test:
     docker:
-      -image: circleci/node:10
+      - image: circleci/node:10
     steps:
       - checkout
       - run:
