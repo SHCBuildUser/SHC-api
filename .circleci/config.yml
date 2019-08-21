@@ -21,13 +21,13 @@ jobs:
             - ./node_modules
       - run:
           name: Analyze code
-          command: |
-            ./cc-test-reporter before-build
-            npm run eslint:ci
-            ./cc-test-reporter after-build --exit-code $?
+          command: npm run eslint:ci
       - run:
           name: Test
-          command: npm run test:ci 
+          command: |
+            ./cc-test-reporter before-build
+            npm run test:ci 
+            ./cc-test-reporter after-build --exit-code $?
       - store_test_results:
           path: reports/junit
       - store_artifacts:
