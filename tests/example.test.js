@@ -8,7 +8,7 @@ describe('say hello', () => {
 
 describe('say goodbye', () => {
     it('should say goodbye to Siouxers', () => {
-        expect(sayGoodbye()).toBe('Bye bye Siouxer');
+        expect(sayGoodbye()).toBe('Bye bye Siouxers');
     });
 });
 
