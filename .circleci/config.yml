@@ -61,13 +61,24 @@ jobs:
           key: dependency-cache-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
       - run:
           name: Build bundle
+          command: npm run build
+      - save_cache: # special step to save the artifact cache
+          key: artifact-cache
+          paths:
+            - ./dist
+  deploy:
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - restore_cache:
+          key: artifact-cache
+      - run:
+          name: Build docker image and deploy to heroku
           command: |
-            npm run build
-            TAG=0.1.$CIRCLE_BUILD_NUM
-            docker build -t buildusershc/shc-api:$TAG .     
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker push buildusershc/shc-api:$TAG
-
+            docker login --username=_ --password=$HEROKU_TOKEN registry.heroku.com
+            docker build -t registry.heroku.com/$HEROKU_APP_NAME/web .
+            docker push registry.heroku.com/$HEROKU_APP_NAME/web
 workflows:
   version: 2
   install_and_test:
@@ -88,3 +99,10 @@ workflows:
           filters:
             branches:
               only: master
+      - hold:
+          type: approval # <<< This key-value pair will set your workflow to a status of "On Hold"
+          requires: # We only run the "hold" job when build has succeeded
+            - build
+      - deploy:
+          reuiqres:
+            - hold
