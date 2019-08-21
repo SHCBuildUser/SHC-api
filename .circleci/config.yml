@@ -65,9 +65,7 @@ jobs:
           paths:
             - ./dist
   deploy:
-    machine:
-      services:
-        - docker
+    machine: true
     steps:
       - checkout
       - restore_cache:
