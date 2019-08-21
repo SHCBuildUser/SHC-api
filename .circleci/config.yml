@@ -62,7 +62,7 @@ jobs:
           command: npm run build
       - run:
           name: Update version
-          command:  echo "$CIRCLE_BUILD_NUM" > _tmp_version_file
+          command:  echo "$CIRCLE_WORKFLOW_ID" > _tmp_version_file
       - save_cache: # special step to save the artifact cache
           key: artifact-cache-{{ checksum "_tmp_version_file" }}
           paths:
@@ -73,7 +73,7 @@ jobs:
       - checkout
       - run:
           name: Update version
-          command:  echo "$CIRCLE_BUILD_NUM" > _tmp_version_file
+          command:  echo "$CIRCLE_WORKFLOW_ID" > _tmp_version_file
       - restore_cache:
           key: artifact-cache-{{ checksum "_tmp_version_file" }}
       - run:
