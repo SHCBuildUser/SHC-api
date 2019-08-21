@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build:
+  install-dependencies:
     docker:
       - image: circleci/node:10
     steps:
@@ -10,18 +10,50 @@ jobs:
       - run:
           name: Setup Dependencies
           command: npm install
+      # - run:
+      #     name: Setup Code Climate test reporter
+      #     command: |
+      #       curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+      #       chmod +x ./cc-test-reporter
+      - save_cache: # special step to save the dependency cache
+          key: dependency-cache-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+      # - run:
+      #     name: Analyze code
+      #     command: npm run eslint:ci
+      # - run:
+      #     name: Test
+      #     command: |
+      #       ./cc-test-reporter before-build
+      #       npm run test:ci 
+      #       ./cc-test-reporter after-build -t lcov --exit-code $?
+      # - store_test_results:
+      #     path: reports/junit
+      # - store_artifacts:
+      #     path: reports/junit
+  analyze:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - run:
+          name: Analyze code
+          command: npm run eslint:ci
+      - store_test_results:
+          path: reports/junit
+      - store_artifacts:
+          path: reports/junit
+  test:
+    docker:
+      -image: circleci/node:10
+    steps:
+      - checkout
       - run:
           name: Setup Code Climate test reporter
           command: |
             curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
             chmod +x ./cc-test-reporter
-      - save_cache: # special step to save the dependency cache
-          key: dependency-cache-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
-          paths:
-            - ./node_modules
-      - run:
-          name: Analyze code
-          command: npm run eslint:ci
       - run:
           name: Test
           command: |
@@ -32,3 +64,18 @@ jobs:
           path: reports/junit
       - store_artifacts:
           path: reports/junit
+
+workflows:
+  version: 2
+  install_and_test:
+    jobs:
+      - install-dependencies
+      - analyze:
+          requires:
+            - install-dependencies
+          # filters:
+          #   branches:
+          #     only: master
+      - test:
+          requires:
+            - analyze
