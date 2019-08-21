@@ -27,7 +27,7 @@ jobs:
           command: |
             ./cc-test-reporter before-build
             npm run test:ci 
-            ./cc-test-reporter after-build -t lcov --exit-code $?
+            ./cc-test-reporter after-build -t lcov reports/junit/coverage --exit-code $?
       - store_test_results:
           path: reports/junit
       - store_artifacts:
