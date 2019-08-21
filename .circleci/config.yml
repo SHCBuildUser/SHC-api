@@ -61,7 +61,7 @@ jobs:
           name: Build bundle
           command: npm run build
       - save_cache: # special step to save the artifact cache
-          key: artifact-cache
+          key: artifact-cache-$CIRCLE_BUILD_NUM
           paths:
             - ./dist
   deploy:
@@ -69,7 +69,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: artifact-cache
+          key: artifact-cache-$CIRCLE_BUILD_NUM
       - run:
           name: Build docker image and deploy to heroku
           command: |
