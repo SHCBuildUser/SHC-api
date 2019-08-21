@@ -55,8 +55,6 @@ jobs:
       - image: circleci/node:10
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
       - restore_cache: # special step to restore the dependency cache
           key: dependency-cache-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
       - run:
@@ -68,7 +66,7 @@ jobs:
             - ./dist
   deploy:
     docker:
-      - image: buildpack-deps:trusty
+      - image: circleci/node:10
     steps:
       - checkout
       - setup_remote_docker:
