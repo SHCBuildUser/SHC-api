@@ -104,5 +104,5 @@ workflows:
           requires: # We only run the "hold" job when build has succeeded
             - build
       - deploy:
-          reuiqres:
+          requires:
             - hold
