@@ -37,6 +37,8 @@ jobs:
       - image: circleci/node:10
     steps:
       - checkout
+      - restore_cache: # special step to restore the dependency cache
+          key: dependency-cache-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
       - run:
           name: Analyze code
           command: npm run eslint:ci
@@ -49,6 +51,8 @@ jobs:
       - image: circleci/node:10
     steps:
       - checkout
+      - restore_cache: # special step to restore the dependency cache
+          key: dependency-cache-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
       - run:
           name: Setup Code Climate test reporter
           command: |
