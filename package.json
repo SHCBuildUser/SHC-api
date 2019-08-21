@@ -11,7 +11,7 @@
     "eslint": "./node_modules/.bin/eslint ./",
     "eslint:ci": "./node_modules/.bin/eslint -f junit -o reports/junit/js-lint-results.xml ./",
     "eslint-fix": "./node_modules/.bin/eslint ./ --fix",
-    "test": "./node_modules/.bin/jest",
+    "test": "./node_modules/.bin/jest --coverage",
     "test:ci": "./node_modules/.bin/jest --ci --coverage  --reporters=jest-junit --coverageDirectory reports/junit/coverage"
   },
   "repository": {
