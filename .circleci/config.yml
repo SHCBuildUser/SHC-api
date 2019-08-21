@@ -60,16 +60,22 @@ jobs:
       - run:
           name: Build bundle
           command: npm run build
+      - run:
+          name: Update version
+          command:  echo "$CIRCLE_BUILD_NUM" > _tmp_version_file
       - save_cache: # special step to save the artifact cache
-          key: artifact-cache-$CIRCLE_BUILD_NUM
+          key: artifact-cache-{{ checksum "_tmp_version_file" }}
           paths:
             - ./dist
   deploy:
     machine: true
     steps:
       - checkout
+      - run:
+          name: Update version
+          command:  echo "$CIRCLE_BUILD_NUM" > _tmp_version_file
       - restore_cache:
-          key: artifact-cache-$CIRCLE_BUILD_NUM
+          key: artifact-cache-{{ checksum "_tmp_version_file" }}
       - run:
           name: Build docker image and deploy to heroku
           command: |
