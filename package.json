@@ -35,7 +35,7 @@
     "jest": "^24.9.0",
     "jest-junit": "^7.0.0",
     "nodemon": "^1.19.1",
-    "webpack-cli": "^3.3.7"
+    "webpack-cli": "^3.3.12"
   },
   "jest-junit": {
     "suiteName": "jest tests",
